@@ -1,6 +1,7 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
+import io
 import sqlite3
 
 # Inisialisasi database
@@ -26,23 +27,24 @@ def delete_image(image_id):
     conn.commit()
     st.experimental_rerun()
 
-# Halaman Home
+# Halaman Home (Kosong)
 def home_page():
     st.markdown(
         "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
         unsafe_allow_html=True,
     )
-    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", 
-             caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
+    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B7</strong>
-        untuk mendeteksi penyakit pada daun mangga. Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
+        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B7.</strong> untuk mendeteksi penyakit pada daun mangga.
+        Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
         unsafe_allow_html=True,
     )
+    # Tambahkan gambar di bawah tulisan
+  
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -50,11 +52,47 @@ def detection_page():
         "<h1 style='text-align: center; color: #FF5722;'>Operasi Deteksi 🔍</h1>",
         unsafe_allow_html=True,
     )
+    confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.5)
     st.markdown(
-        "<p style='text-align: justify;'>Gunakan fitur ini untuk mendeteksi penyakit pada daun mangga.</p>",
+        """
+        <p style='text-align: justify; font-size: 14px; color: #888;'>
+        0.50 adalah default. Jika diubah kurang atau lebih, kemungkinan hasil tidak sesuai atau terjadi error.
+        </p>
+        """,
         unsafe_allow_html=True,
     )
-    st.file_uploader("Unggah gambar untuk dideteksi", type=["jpg", "jpeg", "png"])
+
+    tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])  # Upload di kiri, Kamera di kanan
+
+    with tab2:  # Upload Gambar
+        st.markdown("<h3>Unggah Gambar</h3>", unsafe_allow_html=True)
+        uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda:', type=['jpg', 'jpeg', 'png'])
+        if uploaded_image:
+            image = Image.open(uploaded_image)
+            pred = prediction(image, confidence)
+            st.image(pred, caption="Hasil Deteksi", use_column_width=True)
+
+            buffer = io.BytesIO()
+            Image.fromarray(pred).save(buffer, format="PNG")
+            img_bytes = buffer.getvalue()
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('upload', img_bytes))
+            conn.commit()
+            st.success("Hasil deteksi berhasil disimpan!", icon="✅")
+
+    with tab1:  # Kamera
+        st.markdown("<h3>Ambil Foto dengan Kamera</h3>", unsafe_allow_html=True)
+        image = st.camera_input('Klik tombol di bawah untuk mengambil foto:')
+        if image:
+            image = Image.open(image)
+            pred = prediction(image, confidence)
+            st.image(pred, caption="Hasil Deteksi", use_column_width=True)
+
+            buffer = io.BytesIO()
+            Image.fromarray(pred).save(buffer, format="PNG")
+            img_bytes = buffer.getvalue()
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('camera', img_bytes))
+            conn.commit()
+            st.success("Hasil deteksi berhasil disimpan!", icon="✅")
 
 # Halaman Hasil Deteksi
 def view_results_page():
@@ -62,64 +100,82 @@ def view_results_page():
         "<h1 style='text-align: center; color: #FF5722;'>Hasil Deteksi 📊</h1>",
         unsafe_allow_html=True,
     )
-    st.markdown(
-        "<p style='text-align: center;'>Berikut adalah hasil deteksi yang telah Anda lakukan.</p>",
-        unsafe_allow_html=True,
-    )
-    st.info("Belum ada hasil deteksi.", icon="ℹ️")
+    st.markdown("<p style='text-align: center;'>Berikut adalah daftar hasil deteksi yang telah Anda lakukan.</p>", unsafe_allow_html=True)
 
-# CSS untuk Sidebar yang Responsif
+    images = c.execute("SELECT id, image FROM images ORDER BY id DESC").fetchall()
+    if not images:
+        st.info("Belum ada hasil deteksi.", icon="ℹ️")
+        return
+
+    for image_id, img in images:
+        st.image(img, caption=f"Hasil Deteksi #{image_id}", use_column_width=True)
+        col1, col2 = st.columns([1, 1])
+        with col1:
+            st.download_button(
+                "⬇️ Download Hasil",
+                img,
+                file_name=f"Deteksi_Penyakit_{image_id}.png",
+                mime="image/png",
+                use_container_width=True
+            )
+        with col2:
+            if st.button("🗑️ Hapus", key=f"delete_{image_id}"):
+                delete_image(image_id)
+                st.success("Gambar berhasil dihapus!", icon="✅")
+
+# Navigasi Sidebar
 st.sidebar.markdown(
     """
     <style>
-    .sidebar-nav {
-        display: flex;
-        flex-direction: column;
-        gap: 15px; /* Jarak antar tombol */
-        padding: 0;
+    .sidebar-container {
+        background-color: #f8f9fa; /* Warna latar sidebar */
+        padding: 20px; /* Padding dalam sidebar */
+        border-radius: 10px; /* Sudut membulat */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Bayangan lembut */
     }
-    .sidebar-button {
-        padding: 10px 15px; /* Padding seragam */
-        margin: 0 auto; /* Tengah otomatis */
-        border-radius: 8px; /* Sudut membulat */
-        text-align: center;
-        font-weight: bold;
-        font-size: 16px;
-        cursor: pointer;
-        color: #333; /* Warna teks */
-        background-color: #f5f5f5; /* Warna latar */
-        border: 1px solid #ddd; /* Border */
-        width: 90%; /* Lebar proporsional */
-        transition: background-color 0.3s ease, transform 0.2s ease;
+    .sidebar-box {
+        display: block; /* Mengatur elemen menjadi block */
+        padding: 15px; /* Jarak dalam elemen */
+        margin: 10px 0; /* Jarak antar elemen */
+        border-radius: 10px; /* Sudut membulat */
+        text-align: center; /* Teks rata tengah */
+        font-weight: bold; /* Teks tebal */
+        font-size: 16px; /* Ukuran font */
+        cursor: pointer; /* Menunjukkan elemen bisa diklik */
+        background-color: #ffffff; /* Warna latar tombol */
+        border: 1px solid #e0e0e0; /* Border dengan warna abu-abu */
+        transition: all 0.3s ease; /* Animasi halus */
     }
-    .sidebar-button:hover {
-        background-color: #e0e0e0; /* Latar hover */
-        transform: scale(1.03); /* Efek zoom ringan */
+    .sidebar-box:hover {
+        background-color: #007bff; /* Warna latar saat hover */
+        color: #ffffff; /* Warna teks saat hover */
+        border-color: #0056b3; /* Warna border saat hover */
+        transform: scale(1.05); /* Efek zoom ringan */
     }
-    .sidebar-button:active {
-        background-color: #ccc; /* Latar klik */
+    .sidebar-box:active {
+        background-color: #0056b3; /* Warna latar saat ditekan */
+        color: #ffffff; /* Warna teks saat ditekan */
+        transform: scale(1); /* Reset zoom */
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# State untuk navigasi
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+# Menambahkan Container pada Sidebar
+st.sidebar.markdown('<div class="sidebar-container">', unsafe_allow_html=True)
 
-# Navigasi Sidebar
-st.sidebar.markdown("<div class='sidebar-nav'>", unsafe_allow_html=True)
-
-if st.sidebar.button("🏠 Home"):
+# Tombol Navigasi dengan Gaya Baru
+if st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn"):
     st.session_state.page = "Home"
-st.sidebar.markdown("<div class='sidebar-button'>🔍 Operasi Deteksi</div>", unsafe_allow_html=True)
-if st.sidebar.button("📊 Hasil Deteksi"):
+if st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn"):
+    st.session_state.page = "Operasi Deteksi"
+if st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn"):
     st.session_state.page = "Hasil Deteksi"
 
-st.sidebar.markdown("</div>", unsafe_allow_html=True)
+st.sidebar.markdown('</div>', unsafe_allow_html=True)
 
-# Pilih halaman berdasarkan navigasi
+# Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
 elif st.session_state.page == "Operasi Deteksi":
