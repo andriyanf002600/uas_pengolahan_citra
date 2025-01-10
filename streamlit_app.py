@@ -133,10 +133,17 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navigasi Sidebar
-st.sidebar.markdown("<h2 style='text-align: center;'>Main Menu</h2>", unsafe_allow_html=True)
-st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
+st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
+
+if st.sidebar.button("🏠 Home", key="home_btn", help="Kembali ke halaman Home"):
+    navigate_to("Home")
+
+if st.sidebar.button("🔍 Operasi Deteksi", key="detect_btn", help="Pergi ke Operasi Deteksi"):
+    navigate_to("Operasi Deteksi")
+
+if st.sidebar.button("📊 Hasil Deteksi", key="results_btn", help="Lihat hasil deteksi"):
+    navigate_to("Hasil Deteksi")
+
 
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
