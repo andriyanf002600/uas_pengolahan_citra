@@ -130,7 +130,7 @@ st.sidebar.markdown(
     .sidebar-box {
         display: block; /* Mengatur elemen menjadi block */
         padding: 50px; /* Jarak dalam elemen */
-        margin: 10px 0; /* Jarak antar elemen */
+        margin: 100px 0; /* Jarak antar elemen */
         border-radius: 10px; /* Sudut membulat */
         text-align: center; /* Teks rata tengah */
         font-weight: bold; /* Teks tebal */
