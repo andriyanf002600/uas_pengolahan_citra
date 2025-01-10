@@ -161,6 +161,7 @@ st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Detek
 st.markdown(
     "<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>",
     unsafe_allow_html=True,
+)
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
