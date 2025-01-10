@@ -60,7 +60,14 @@ def detection_page():
         unsafe_allow_html=True,
     )
     confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.5)
-    st.markdown(f"<p style='text-align: center;'>Confidence: <strong>{confidence}</strong></p>", unsafe_allow_html=True)
+    st.markdown(
+        """
+        <p style='text-align: justify; font-size: 14px; color: #888;'>
+        0.5 adalah default. Jika diubah kurang atau lebih, kemungkinan hasil tidak sesuai atau terjadi error.
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
 
     tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])  # Upload di kiri, Kamera di kanan
 
@@ -124,6 +131,37 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navigasi kotak di sidebar
+st.sidebar.markdown(
+    """
+    <style>
+    .css-1y4p8pa .stRadio > div { 
+        display: flex; 
+        flex-direction: column; 
+    }
+    .stRadio div[role="radiogroup"] > label {
+        display: block;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        margin-bottom: 10px;
+        text-align: center;
+        cursor: pointer;
+        background-color: #f9f9f9;
+        color: #333;
+        font-weight: bold;
+    }
+    .stRadio div[role="radiogroup"] > label:hover {
+        background-color: #e6e6e6;
+    }
+    .stRadio div[role="radiogroup"] > label:checked {
+        background-color: #4CAF50;
+        color: white;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
 st.sidebar.title("🔄 Navigasi")
 menu = st.sidebar.radio(
     "",
