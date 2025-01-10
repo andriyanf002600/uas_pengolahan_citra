@@ -68,20 +68,56 @@ def view_results_page():
     )
     st.info("Belum ada hasil deteksi.", icon="ℹ️")
 
-# Navigasi Sidebar
-st.sidebar.markdown("## Navigasi")
+# CSS untuk Sidebar yang Responsif
+st.sidebar.markdown(
+    """
+    <style>
+    .sidebar-nav {
+        display: flex;
+        flex-direction: column;
+        gap: 15px; /* Jarak antar tombol */
+        padding: 0;
+    }
+    .sidebar-button {
+        padding: 10px 15px; /* Padding seragam */
+        margin: 0 auto; /* Tengah otomatis */
+        border-radius: 8px; /* Sudut membulat */
+        text-align: center;
+        font-weight: bold;
+        font-size: 16px;
+        cursor: pointer;
+        color: #333; /* Warna teks */
+        background-color: #f5f5f5; /* Warna latar */
+        border: 1px solid #ddd; /* Border */
+        width: 90%; /* Lebar proporsional */
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .sidebar-button:hover {
+        background-color: #e0e0e0; /* Latar hover */
+        transform: scale(1.03); /* Efek zoom ringan */
+    }
+    .sidebar-button:active {
+        background-color: #ccc; /* Latar klik */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-# Tombol Navigasi
+# Navigasi Sidebar
+st.sidebar.markdown("<div class='sidebar-nav'>", unsafe_allow_html=True)
+
 if st.sidebar.button("🏠 Home"):
     st.session_state.page = "Home"
-if st.sidebar.button("🔍 Operasi Deteksi"):
-    st.session_state.page = "Operasi Deteksi"
+st.sidebar.markdown("<div class='sidebar-button'>🔍 Operasi Deteksi</div>", unsafe_allow_html=True)
 if st.sidebar.button("📊 Hasil Deteksi"):
     st.session_state.page = "Hasil Deteksi"
+
+st.sidebar.markdown("</div>", unsafe_allow_html=True)
 
 # Pilih halaman berdasarkan navigasi
 if st.session_state.page == "Home":
