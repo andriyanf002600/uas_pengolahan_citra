@@ -17,17 +17,27 @@ conn.commit()
 # Inisialisasi model YOLO
 model = YOLO("best.pt")
 
+# Fungsi prediksi
 def prediction(image, conf):
     result = model.predict(image, conf=conf)
     res_plotted = result[0].plot()[:, :, ::-1]
     return res_plotted
 
+# Fungsi hapus gambar dari database
 def delete_image(image_id):
     c.execute("DELETE FROM images WHERE id=?", (image_id,))
     conn.commit()
     st.experimental_rerun()
 
-# Halaman Home (Kosong)
+# Fungsi navigasi
+def navigate_to(page):
+    st.session_state.page = page
+
+# Inisialisasi halaman default
+if "page" not in st.session_state:
+    st.session_state.page = "Home"
+
+# Halaman Home
 def home_page():
     st.markdown(
         "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
@@ -50,7 +60,7 @@ def detection_page():
         "<h1 style='text-align: center; color: #FF5722;'>Operasi Deteksi 🔍</h1>",
         unsafe_allow_html=True,
     )
-    confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.5)
+    confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.50)
     st.markdown(
         """
         <p style='text-align: justify; font-size: 14px; color: #888;'>
@@ -60,7 +70,7 @@ def detection_page():
         unsafe_allow_html=True,
     )
 
-    tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])  # Upload di kiri, Kamera di kanan
+    tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])
 
     with tab2:  # Upload Gambar
         st.markdown("<h3>Unggah Gambar</h3>", unsafe_allow_html=True)
@@ -106,6 +116,7 @@ def view_results_page():
         return
 
     for image_id, img in images:
+        img = Image.open(io.BytesIO(img))
         st.image(img, caption=f"Hasil Deteksi #{image_id}", use_column_width=True)
         col1, col2 = st.columns([1, 1])
         with col1:
@@ -121,44 +132,11 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navbar Tengah
 # Navigasi Sidebar
-st.sidebar.markdown(
-    """
-    <style>
-    .sidebar-box {
-        display: block; /* Elemen menjadi block */
-        padding: 10px 20px; /* Jarak dalam elemen */
-        margin: 10px 0; /* Jarak antar elemen */
-        border-radius: 10px; /* Sudut membulat */
-        text-align: center; /* Teks rata tengah */
-        font-weight: bold; /* Teks tebal */
-        cursor: pointer; /* Elemen bisa diklik */
-        background-color: #f0f0f0; /* Warna latar */
-        border: 1px solid #ccc; /* Border dengan warna abu */
-        width: 100%; /* Lebar penuh */
-        box-sizing: border-box; /* Sertakan border dalam ukuran */
-    }
-    .sidebar-box:hover {
-        background-color: #e0e0e0; /* Warna latar saat hover */
-        border-color: #bbb; /* Warna border saat hover */
-    }
-    button[aria-pressed="true"] {
-        background-color: #4CAF50 !important; /* Warna aktif */
-        color: white !important; /* Warna teks aktif */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-# Tombol Navigasi
-with st.sidebar:
-    st.markdown("<h2 style='text-align: center;'>Main Menu</h2>", unsafe_allow_html=True)
-    st.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-    st.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-    st.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
-
+st.sidebar.markdown("<h2 style='text-align: center;'>Main Menu</h2>", unsafe_allow_html=True)
+st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
+st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
+st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
 
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
@@ -168,7 +146,7 @@ elif st.session_state.page == "Operasi Deteksi":
 elif st.session_state.page == "Hasil Deteksi":
     view_results_page()
 
-# Footer Copyright di semua halaman
+# Footer
 st.markdown(
     "<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>",
     unsafe_allow_html=True,
