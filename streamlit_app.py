@@ -42,6 +42,8 @@ def home_page():
         """,
         unsafe_allow_html=True,
     )
+    # Tambahkan gambar di bawah tulisan
+    st.image("https://radarpekalongan.disway.id/upload/4aef1549825723e9d9062e7f2c440f3b.jpg", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -163,6 +165,12 @@ elif st.session_state.page == "Operasi Deteksi":
     detection_page()
 elif st.session_state.page == "Hasil Deteksi":
     view_results_page()
+
+# Footer Copyright di semua halaman
+st.markdown(
+    "<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>",
+    unsafe_allow_html=True,
+)
 
 # Tutup koneksi database
 conn.close()
