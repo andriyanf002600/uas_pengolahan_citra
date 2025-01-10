@@ -33,6 +33,7 @@ def home_page():
         "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
         unsafe_allow_html=True,
     )
+    st.image("https://radarpekalongan.disway.id/upload/4aef1549825723e9d9062e7f2c440f3b.jpg", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
     st.markdown(
         """
         <p style='text-align: justify;'>
@@ -43,7 +44,7 @@ def home_page():
         unsafe_allow_html=True,
     )
     # Tambahkan gambar di bawah tulisan
-    st.image("https://radarpekalongan.disway.id/upload/4aef1549825723e9d9062e7f2c440f3b.jpg", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
+  
 
 # Halaman Operasi Deteksi
 def detection_page():
