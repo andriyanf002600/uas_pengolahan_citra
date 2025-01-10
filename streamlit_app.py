@@ -137,7 +137,7 @@ st.markdown(
     <style>
     .stButton > button {
         width: 100%; /* Tombol memenuhi lebar sidebar */
-        padding: 10px; /* Jarak dalam tombol */
+        padding: 100px; /* Jarak dalam tombol */
         font-size: 16px; /* Ukuran teks tombol */
     }
     </style>
