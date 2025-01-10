@@ -1,7 +1,6 @@
 import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
-import io
 import sqlite3
 
 # Inisialisasi database
@@ -68,65 +67,28 @@ def view_results_page():
         unsafe_allow_html=True,
     )
     st.info("Belum ada hasil deteksi.", icon="ℹ️")
+
 # Navigasi Sidebar
-# CSS untuk Sidebar
-st.sidebar.markdown(
-    """
-    <style>
-    .sidebar-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 12px 20px;
-        margin: 8px 0;
-        border-radius: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        transition: all 0.3s ease;
-        width: calc(100% - 16px);
-        box-sizing: border-box;
-    }
-    .sidebar-box:hover {
-        background-color: #ececec;
-        border-color: #bbb;
-        transform: scale(1.02);
-    }
-    .sidebar-box:active {
-        background-color: #ddd;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+st.sidebar.markdown("## Navigasi")
 
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-# Fungsi Navigasi
-def navigate_to(page):
-    st.session_state.page = page
-
 # Tombol Navigasi
-st.sidebar.markdown(
-    f"""
-    <div class="sidebar-box" onclick="window.location.href='?page=Home'">🏠 Home</div>
-    <div class="sidebar-box" onclick="window.location.href='?page=Operasi Deteksi'">🔍 Operasi Deteksi</div>
-    <div class="sidebar-box" onclick="window.location.href='?page=Hasil Deteksi'">📊 Hasil Deteksi</div>
-    """,
-    unsafe_allow_html=True,
-)
+if st.sidebar.button("🏠 Home"):
+    st.session_state.page = "Home"
+if st.sidebar.button("🔍 Operasi Deteksi"):
+    st.session_state.page = "Operasi Deteksi"
+if st.sidebar.button("📊 Hasil Deteksi"):
+    st.session_state.page = "Hasil Deteksi"
 
 # Pilih halaman berdasarkan navigasi
-page = st.experimental_get_query_params().get("page", ["Home"])[0]
-
-if page == "Home":
+if st.session_state.page == "Home":
     home_page()
-elif page == "Operasi Deteksi":
+elif st.session_state.page == "Operasi Deteksi":
     detection_page()
-elif page == "Hasil Deteksi":
+elif st.session_state.page == "Hasil Deteksi":
     view_results_page()
 
 # Footer Copyright di semua halaman
@@ -134,7 +96,6 @@ st.markdown(
     "<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>",
     unsafe_allow_html=True,
 )
-
 
 # Tutup koneksi database
 conn.close()
