@@ -138,18 +138,14 @@ st.sidebar.markdown(
         background-color: #f0f0f0; /* Warna latar belakang */
         border: 1px solid #ccc; /* Border dengan warna abu-abu */
         width: 100%; /* Lebar penuh */
+        color: #333; /* Warna teks */
+        text-decoration: none; /* Hilangkan garis bawah */
     }
     .sidebar-box:hover {
         background-color: #e0e0e0; /* Warna latar belakang saat hover */
         border-color: #bbb; /* Warna border saat hover */
     }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-
-
+   
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
