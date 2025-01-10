@@ -38,13 +38,13 @@ def main_page():
         unsafe_allow_html=True,
     )
 
-    confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.5)
+    confidence = st.slider('Pilih Tingkat Kepercayaan (Confidence)', 0.1, 1.0, 0.5, help="Pilih tingkat kepercayaan deteksi penyakit pada daun")
     st.markdown(f"<p style='text-align: center; font-size: 16px;'>Confidence: <strong>{confidence}</strong></p>", unsafe_allow_html=True)
 
     tab1, tab2 = st.tabs(['📷 Kamera', '📂 Upload Gambar'])
 
     with tab1:
-        st.markdown("<h3>Ambil Foto dengan Kamera</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-family: Arial, sans-serif;'>Ambil Foto dengan Kamera</h3>", unsafe_allow_html=True)
         image = st.camera_input('Klik tombol di bawah untuk mengambil foto:')
         if image:
             image = Image.open(image)
@@ -59,7 +59,7 @@ def main_page():
             st.success("Hasil deteksi berhasil disimpan!", icon="✅")
 
     with tab2:
-        st.markdown("<h3>Unggah Gambar</h3>", unsafe_allow_html=True)
+        st.markdown("<h3 style='font-family: Arial, sans-serif;'>Unggah Gambar</h3>", unsafe_allow_html=True)
         uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda:', type=['jpg', 'jpeg', 'png'])
         if uploaded_image:
             image = Image.open(uploaded_image)
@@ -102,28 +102,36 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi kotak modern
-def navigation():
-    st.markdown("<h1 style='text-align: center; font-family: Arial, sans-serif; color: #333;'>Navigasi Utama</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-size: 18px;'>Pilih halaman yang ingin diakses:</p>", unsafe_allow_html=True)
+# Navigasi kotak di sidebar
+st.sidebar.title("🔄 Navigasi")
+st.sidebar.markdown(
+    """
+    <style>
+    .nav-button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #4CAF50;
+        color: white;
+        text-align: center;
+        font-size: 16px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+    .nav-button:hover {
+        background-color: #45a049;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 
-    col1, col2 = st.columns(2, gap="large")
-    with col1:
-        if st.button("🏠 Home", use_container_width=True):
-            st.session_state['menu'] = 'home'
-    with col2:
-        if st.button("📊 Hasil Deteksi", use_container_width=True):
-            st.session_state['menu'] = 'results'
-
-# Logika navigasi
-if 'menu' not in st.session_state:
-    st.session_state['menu'] = 'navigation'
-
-if st.session_state['menu'] == 'navigation':
-    navigation()
-elif st.session_state['menu'] == 'home':
+if st.sidebar.button("🏠 Home", key="home", use_container_width=True):
     main_page()
-elif st.session_state['menu'] == 'results':
+
+if st.sidebar.button("📊 Hasil Deteksi", key="results", use_container_width=True):
     view_results_page()
 
 # Tutup koneksi database
