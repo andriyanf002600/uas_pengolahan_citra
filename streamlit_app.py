@@ -122,44 +122,43 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navbar Tengah
-st.markdown(
+# Navigasi Sidebar
+st.sidebar.markdown(
     """
     <style>
-    .centered-navbar {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
+    .sidebar-box {
+        display: block; /* Elemen menjadi block */
+        padding: 10px 20px; /* Jarak dalam elemen */
+        margin: 10px 0; /* Jarak antar elemen */
+        border-radius: 10px; /* Sudut membulat */
+        text-align: center; /* Teks rata tengah */
+        font-weight: bold; /* Teks tebal */
+        cursor: pointer; /* Elemen bisa diklik */
+        background-color: #f0f0f0; /* Warna latar */
+        border: 1px solid #ccc; /* Border dengan warna abu */
+        width: 100%; /* Lebar penuh */
+        box-sizing: border-box; /* Sertakan border dalam ukuran */
     }
-    .centered-navbar button {
-        background-color: #4CAF50;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        font-size: 16px;
+    .sidebar-box:hover {
+        background-color: #e0e0e0; /* Warna latar saat hover */
+        border-color: #bbb; /* Warna border saat hover */
     }
-    .centered-navbar button:hover {
-        background-color: #45a049;
+    button[aria-pressed="true"] {
+        background-color: #4CAF50 !important; /* Warna aktif */
+        color: white !important; /* Warna teks aktif */
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# State untuk navigasi
-if "page" not in st.session_state:
-    st.session_state.page = "Home"
+# Tombol Navigasi
+with st.sidebar:
+    st.markdown("<h2 style='text-align: center;'>Main Menu</h2>", unsafe_allow_html=True)
+    st.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
+    st.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
+    st.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
 
-# Fungsi Navigasi
-def navigate_to(page):
-    st.session_state.page = page
-
-# Navbar - Tombol di Tengah
-st.markdown('<div class="centered-navbar">', unsafe_allow_html=True)
-st.button("🏠 Home", on_click=navigate_to, args=("Home",))
-st.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",))
-st.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",))
-st.markdown('</div>', unsafe_allow_html=True)
 
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
