@@ -155,10 +155,13 @@ if "page" not in st.session_state:
 def navigate_to(page):
     st.session_state.page = page
 
-# Tombol Navigasi
-st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
+st.sidebar.markdown(
+    """
+    <div class="sidebar-box" onclick="parent.location='#home'">🏠 Home</div>
+    <div class="sidebar-box" onclick="parent.location='#detect'">🔍 Operasi Deteksi</div>
+    <div class="sidebar-box" onclick="parent.location='#results'">📊 Hasil Deteksi</div>
+    """,
+    unsafe_allow_html=True,
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
