@@ -131,29 +131,25 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navigasi kotak di sidebar
+st.sidebar.title("🔄 Navigasi")
 st.sidebar.markdown(
     """
     <style>
-    .css-1y4p8pa .stRadio > div { 
-        display: flex; 
-        flex-direction: column; 
-    }
-    .stRadio div[role="radiogroup"] > label {
+    .stSidebar .stRadio label {
         display: block;
-        border: 1px solid #ccc;
-        border-radius: 10px;
         padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
         margin-bottom: 10px;
+        background-color: #f9f9f9;
+        font-weight: bold;
         text-align: center;
         cursor: pointer;
-        background-color: #f9f9f9;
-        color: #333;
-        font-weight: bold;
     }
-    .stRadio div[role="radiogroup"] > label:hover {
+    .stSidebar .stRadio label:hover {
         background-color: #e6e6e6;
     }
-    .stRadio div[role="radiogroup"] > label:checked {
+    .stSidebar .stRadio label[data-selected="true"] {
         background-color: #4CAF50;
         color: white;
     }
@@ -162,18 +158,17 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-st.sidebar.title("🔄 Navigasi")
 menu = st.sidebar.radio(
-    "",
-    ["🏠 Home", "🔍 Operasi Deteksi", "📊 Hasil Deteksi"],
+    "Pilih Halaman",
+    ["🏠 Home", "Operasi Deteksi", "Hasil Deteksi"],
     label_visibility="collapsed",
 )
 
 if menu == "🏠 Home":
     home_page()
-elif menu == "🔍 Operasi Deteksi":
+elif menu == "Operasi Deteksi":
     detection_page()
-elif menu == "📊 Hasil Deteksi":
+elif menu == "Hasil Deteksi":
     view_results_page()
 
 # Tutup koneksi database
