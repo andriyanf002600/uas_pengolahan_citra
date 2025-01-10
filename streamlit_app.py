@@ -43,6 +43,8 @@ def home_page():
         """,
         unsafe_allow_html=True,
     )
+    # Tambahkan gambar di bawah tulisan
+  
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -121,19 +123,41 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Sidebar Navigasi
-st.sidebar.title("Navigasi")
-if st.sidebar.button("🏠 Home"):
-    st.session_state.page = "Home"
-elif st.sidebar.button("🔍 Operasi Deteksi"):
-    st.session_state.page = "Operasi Deteksi"
-elif st.sidebar.button("📊 Hasil Deteksi"):
-    st.session_state.page = "Hasil Deteksi"
-
+# Navigasi Sidebar
+st.sidebar.markdown(
+    """
+    <style>
+    .sidebar-box {
+        display: block; /* Mengatur elemen menjadi block */
+        padding: 15px; /* Jarak dalam elemen */
+        margin: 10px 0; /* Jarak antar elemen */
+        border-radius: 10px; /* Sudut membulat */
+        text-align: center; /* Teks rata tengah */
+        font-weight: bold; /* Teks tebal */
+        cursor: pointer; /* Menunjukkan elemen bisa diklik */
+        background-color: #f0f0f0; /* Warna latar belakang */
+        border: 1px solid #ccc; /* Border dengan warna abu-abu */
+        width: 100%; /* Lebar penuh */
+        color: #333; /* Warna teks */
+        text-decoration: none; /* Hilangkan garis bawah */
+    }
+    .sidebar-box:hover {
+        background-color: #e0e0e0; /* Warna latar belakang saat hover */
+        border-color: #bbb; /* Warna border saat hover */
+    }
+   
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
+# Fungsi Navigasi
+def navigate_to(page):
+    st.session_state.page = page
+
+# Tombol Navigasi
+st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
+st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
+st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
