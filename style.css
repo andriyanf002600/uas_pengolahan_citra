@@ -1,18 +1,18 @@
 <style>
-.sidebar-box {
-    padding: 15px; /* Memberikan jarak dalam elemen */
-    margin: 10px 0; /* Memberikan jarak antar elemen */
-    border-radius: 10px; /* Membuat sudut kotak melengkung */
-    text-align: center; /* Teks di dalam kotak rata tengah */
-    font-weight: bold; /* Teks dibuat tebal */
-    cursor: pointer; /* Mengubah kursor menjadi pointer saat hover */
-    background-color: #f0f0f0; /* Warna latar belakang kotak */
-    border: 1px solid #ccc; /* Warna border abu-abu */
-    width: 200px; /* Lebar tetap untuk semua kotak */
-    display: inline-block; /* Agar properti width diterapkan */
-}
-.sidebar-box:hover {
-    background-color: #e0e0e0; /* Warna latar belakang saat hover */
-    border-color: #bbb; /* Warna border saat hover */
-}
-</style>
+    .sidebar-box {
+        display: block; /* Mengatur elemen menjadi block */
+        padding: 50px; /* Jarak dalam elemen */
+        margin: 100px 0; /* Jarak antar elemen */
+        border-radius: 10px; /* Sudut membulat */
+        text-align: center; /* Teks rata tengah */
+        font-weight: bold; /* Teks tebal */
+        cursor: pointer; /* Menunjukkan elemen bisa diklik */
+        background-color: #f0f0f0; /* Warna latar belakang */
+        border: 1px solid #ccc; /* Border dengan warna abu-abu */
+        width: 100%; /* Lebar penuh */
+    }
+    .sidebar-box:hover {
+        background-color: #e0e0e0; /* Warna latar belakang saat hover */
+        border-color: #bbb; /* Warna border saat hover */
+    }
+    </style>
