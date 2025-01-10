@@ -145,9 +145,6 @@ st.sidebar.markdown(
         background-color: #e0e0e0;
         border-color: #bbb;
     }
-)
-
-
 
 # State untuk navigasi
 if "page" not in st.session_state:
