@@ -131,7 +131,22 @@ def view_results_page():
             if st.button("🗑️ Hapus", key=f"delete_{image_id}"):
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
-
+# Custom CSS untuk memperlebar sidebar
+st.markdown(
+    """
+    <style>
+    /* Lebarkan sidebar */
+    [data-testid="stSidebar"] {
+        width: 350px; /* Lebar sidebar (ubah sesuai kebutuhan) */
+    }
+    /* Atur ulang area konten agar tidak terlalu sempit */
+    [data-testid="stAppViewContainer"] {
+        margin-left: 370px; /* Berikan ruang untuk sidebar */
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 # Navigasi Sidebar
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
 
