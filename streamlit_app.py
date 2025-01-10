@@ -27,29 +27,10 @@ def delete_image(image_id):
     conn.commit()
     st.experimental_rerun()
 
-# Halaman Home (Informasi)
+# Halaman Home (Kosong)
 def home_page():
     st.markdown(
-        "<h1 style='text-align: center; color: #4CAF50;'>Aplikasi Deteksi Penyakit Pada Daun Mangga 🌿</h1>",
-        unsafe_allow_html=True,
-    )
-    st.markdown(
-        """
-        <p style='text-align: justify; font-size: 18px;'>
-        Aplikasi ini dirancang untuk mendeteksi penyakit pada daun mangga menggunakan teknologi terkini. 
-        Dengan menggunakan algoritma deteksi berbasis YOLO (You Only Look Once), 
-        aplikasi ini mampu mengenali pola dan gejala penyakit pada gambar daun mangga secara akurat.
-        </p>
-        <h3>Arsitektur Aplikasi</h3>
-        <ul style='font-size: 18px;'>
-            <li><strong>YOLO:</strong> Model deteksi objek yang cepat dan akurat untuk menganalisis gambar daun mangga.</li>
-            <li><strong>Streamlit:</strong> Framework Python untuk membuat antarmuka aplikasi web yang interaktif.</li>
-            <li><strong>SQLite:</strong> Database ringan untuk menyimpan hasil deteksi.</li>
-        </ul>
-        <p style='text-align: justify; font-size: 18px;'>
-        Aplikasi ini juga mendukung pengambilan foto langsung melalui kamera atau unggah gambar dari perangkat.
-        </p>
-        """,
+        "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
         unsafe_allow_html=True,
     )
 
@@ -130,14 +111,35 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi Sidebar yang Tidak Menyerupai Radio Button
-st.sidebar.title("🔄 Navigasi")
-menu = st.sidebar.selectbox(
-    "Pilih Halaman",
-    ["🏠 Home", "Operasi Deteksi", "Hasil Deteksi"],
-    format_func=lambda x: x.split(" ")[1],  # Hanya menampilkan teks tanpa ikon
+# Navigasi Sidebar dengan Gaya Kotak
+st.sidebar.markdown(
+    """
+    <style>
+    .sidebar-box {
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 5px;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #f5f5f5;
+        border: 1px solid #ddd;
+    }
+    .sidebar-box:hover {
+        background-color: #e0e0e0;
+        border-color: #bbb;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
+st.sidebar.markdown("<div class='sidebar-box'>🏠 Home</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-box'>🔍 Operasi Deteksi</div>", unsafe_allow_html=True)
+st.sidebar.markdown("<div class='sidebar-box'>📊 Hasil Deteksi</div>", unsafe_allow_html=True)
+
+# Menentukan logika halaman berdasarkan navigasi
+menu = st.sidebar.radio("", ["Home", "Operasi Deteksi", "Hasil Deteksi"], label_visibility="collapsed")
 if menu == "Home":
     home_page()
 elif menu == "Operasi Deteksi":
