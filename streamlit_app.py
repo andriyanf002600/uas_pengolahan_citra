@@ -146,15 +146,14 @@ st.markdown(
 )
 # Navigasi Sidebar
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
-
 if st.sidebar.button("🏠 Home", key="home_btn", help="Kembali ke halaman Home"):
-    navigate_to("Home")
-
+    st.write("Navigasi ke halaman Home")
+  
 if st.sidebar.button("🔍 Operasi Deteksi", key="detect_btn", help="Pergi ke Operasi Deteksi"):
-    navigate_to("Operasi Deteksi")
-
+    st.write("Navigasi ke halaman Operasi Deteksi")
+  
 if st.sidebar.button("📊 Hasil Deteksi", key="results_btn", help="Lihat hasil deteksi"):
-    navigate_to("Hasil Deteksi")
+    st.write("Navigasi ke halaman Hasil Deteksi")
 
 
 # Halaman berdasarkan navigasi
