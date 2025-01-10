@@ -124,7 +124,6 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navigasi Sidebar
-st.markdown("## Main Menu")
 st.sidebar.markdown(
     """
     <style>
