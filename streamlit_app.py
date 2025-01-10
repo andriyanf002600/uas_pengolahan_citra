@@ -121,43 +121,18 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Sidebar Navigasi dengan CSS dan HTML
-st.sidebar.markdown(
-    """
-    <style>
-    .sidebar-box {
-        display: block;
-        padding: 15px;
-        margin: 10px 0;
-        border-radius: 10px;
-        text-align: center;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        width: 100%;
-        color: #333;
-        text-decoration: none;
-    }
-    .sidebar-box:hover {
-        background-color: #e0e0e0;
-        border-color: #bbb;
-    }
-    </style>
-    <a href="#" class="sidebar-box" onclick="window.location.reload(); window.streamlitSend({type: 'navigate', value: 'Home'})">🏠 Home</a>
-    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Operasi Deteksi'})">🔍 Operasi Deteksi</a>
-    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Hasil Deteksi'})">📊 Hasil Deteksi</a>
-    """,
-    unsafe_allow_html=True,
-)
+# Sidebar Navigasi
+st.sidebar.title("Navigasi")
+if st.sidebar.button("🏠 Home"):
+    st.session_state.page = "Home"
+elif st.sidebar.button("🔍 Operasi Deteksi"):
+    st.session_state.page = "Operasi Deteksi"
+elif st.sidebar.button("📊 Hasil Deteksi"):
+    st.session_state.page = "Hasil Deteksi"
 
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
-
-# Fungsi Navigasi
-def navigate_to(page):
-    st.session_state.page = page
 
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
