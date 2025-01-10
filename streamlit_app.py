@@ -36,7 +36,7 @@ def home_page():
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B0.</strong> untuk mendeteksi penyakit pada daun mangga.
+        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B7.</strong> untuk mendeteksi penyakit pada daun mangga.
         Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
