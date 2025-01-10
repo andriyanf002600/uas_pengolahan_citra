@@ -124,31 +124,32 @@ def view_results_page():
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
 # Navigasi Sidebar
+# CSS untuk Sidebar
 st.sidebar.markdown(
     """
     <style>
     .sidebar-box {
-        display: flex; /* Gunakan flex untuk responsivitas */
-        align-items: center; /* Pusatkan konten secara vertikal */
-        justify-content: center; /* Pusatkan konten secara horizontal */
-        padding: 12px 20px; /* Padding yang proporsional */
-        margin: 8px 0; /* Margin antar elemen */
-        border-radius: 10px; /* Sudut membulat */
-        font-weight: bold; /* Teks tebal */
-        cursor: pointer; /* Menunjukkan elemen bisa diklik */
-        background-color: #f9f9f9; /* Warna latar belakang */
-        border: 1px solid #ddd; /* Border dengan warna abu-abu */
-        transition: all 0.3s ease; /* Animasi halus */
-        width: calc(100% - 16px); /* Lebar dengan jarak sisi */
-        box-sizing: border-box; /* Sertakan padding dalam lebar */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border-radius: 10px;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        transition: all 0.3s ease;
+        width: calc(100% - 16px);
+        box-sizing: border-box;
     }
     .sidebar-box:hover {
-        background-color: #ececec; /* Warna latar belakang saat hover */
-        border-color: #bbb; /* Warna border saat hover */
-        transform: scale(1.02); /* Sedikit memperbesar */
+        background-color: #ececec;
+        border-color: #bbb;
+        transform: scale(1.02);
     }
     .sidebar-box:active {
-        background-color: #ddd; /* Warna saat diklik */
+        background-color: #ddd;
     }
     </style>
     """,
@@ -165,20 +166,22 @@ def navigate_to(page):
 
 # Tombol Navigasi
 st.sidebar.markdown(
-    """
-    <div class="sidebar-box" onclick="streamlit.sendMessage({target: 'navigate', data: 'Home'})">🏠 Home</div>
-    <div class="sidebar-box" onclick="streamlit.sendMessage({target: 'navigate', data: 'Operasi Deteksi'})">🔍 Operasi Deteksi</div>
-    <div class="sidebar-box" onclick="streamlit.sendMessage({target: 'navigate', data: 'Hasil Deteksi'})">📊 Hasil Deteksi</div>
+    f"""
+    <div class="sidebar-box" onclick="window.location.href='?page=Home'">🏠 Home</div>
+    <div class="sidebar-box" onclick="window.location.href='?page=Operasi Deteksi'">🔍 Operasi Deteksi</div>
+    <div class="sidebar-box" onclick="window.location.href='?page=Hasil Deteksi'">📊 Hasil Deteksi</div>
     """,
     unsafe_allow_html=True,
 )
 
-# Halaman berdasarkan navigasi
-if st.session_state.page == "Home":
+# Pilih halaman berdasarkan navigasi
+page = st.experimental_get_query_params().get("page", ["Home"])[0]
+
+if page == "Home":
     home_page()
-elif st.session_state.page == "Operasi Deteksi":
+elif page == "Operasi Deteksi":
     detection_page()
-elif st.session_state.page == "Hasil Deteksi":
+elif page == "Hasil Deteksi":
     view_results_page()
 
 # Footer Copyright di semua halaman
