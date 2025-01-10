@@ -123,6 +123,7 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
+# Navigasi Sidebar
 st.sidebar.markdown(
     """
     <style>
@@ -135,8 +136,8 @@ st.sidebar.markdown(
         cursor: pointer;
         background-color: #f0f0f0;
         border: 1px solid #ccc;
-        width: 200px; /* Lebar tetap */
-        display: inline-block;
+        width: 200px; /* Lebar tetap untuk semua kotak */
+        display: inline-block; /* Agar properti width diterapkan */
     }
     .sidebar-box:hover {
         background-color: #e0e0e0;
@@ -147,6 +148,7 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
+
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
@@ -155,13 +157,10 @@ if "page" not in st.session_state:
 def navigate_to(page):
     st.session_state.page = page
 
-st.sidebar.markdown(
-    """
-    <div class="sidebar-box" onclick="parent.location='#home'">🏠 Home</div>
-    <div class="sidebar-box" onclick="parent.location='#detect'">🔍 Operasi Deteksi</div>
-    <div class="sidebar-box" onclick="parent.location='#results'">📊 Hasil Deteksi</div>
-    """,
-    unsafe_allow_html=True,
+# Tombol Navigasi
+st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
+st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
+st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
