@@ -33,6 +33,15 @@ def home_page():
         "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
         unsafe_allow_html=True,
     )
+    st.markdown(
+        """
+        <p style='text-align: justify;'>
+        Aplikasi ini menggunakan teknologi <strong>YOLO (You Only Look Once)</strong> untuk mendeteksi penyakit pada daun mangga.
+        Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -85,7 +94,7 @@ def detection_page():
 # Halaman Hasil Deteksi
 def view_results_page():
     st.markdown(
-        "<h1 style='text-align: center; color: #FF5722;'>Hasil Deteksi 🔍</h1>",
+        "<h1 style='text-align: center; color: #FF5722;'>Hasil Deteksi 📊</h1>",
         unsafe_allow_html=True,
     )
     st.markdown("<p style='text-align: center;'>Berikut adalah daftar hasil deteksi yang telah Anda lakukan.</p>", unsafe_allow_html=True)
@@ -116,14 +125,14 @@ st.sidebar.markdown(
     """
     <style>
     .sidebar-box {
-        padding: 10px;
-        margin: 5px 0;
-        border-radius: 5px;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
         text-align: center;
         font-weight: bold;
         cursor: pointer;
-        background-color: #f5f5f5;
-        border: 1px solid #ddd;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
     }
     .sidebar-box:hover {
         background-color: #e0e0e0;
@@ -134,17 +143,12 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-st.sidebar.markdown("<div class='sidebar-box'>🏠 Home</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-box'>🔍 Operasi Deteksi</div>", unsafe_allow_html=True)
-st.sidebar.markdown("<div class='sidebar-box'>📊 Hasil Deteksi</div>", unsafe_allow_html=True)
-
-# Menentukan logika halaman berdasarkan navigasi
-menu = st.sidebar.radio("", ["Home", "Operasi Deteksi", "Hasil Deteksi"], label_visibility="collapsed")
-if menu == "Home":
+# Sidebar dengan gaya kotak untuk navigasi
+if st.sidebar.button("🏠 Home", key="home"):
     home_page()
-elif menu == "Operasi Deteksi":
+elif st.sidebar.button("🔍 Operasi Deteksi", key="detect"):
     detection_page()
-elif menu == "Hasil Deteksi":
+elif st.sidebar.button("📊 Hasil Deteksi", key="results"):
     view_results_page()
 
 # Tutup koneksi database
