@@ -128,25 +128,26 @@ st.sidebar.markdown(
     """
     <style>
     .sidebar-box {
-        padding: 15px;
-        margin: 10px 0;
-        border-radius: 10px;
-        text-align: center;
-        font-weight: bold;
-        cursor: pointer;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        width: 200px; /* Lebar tetap untuk semua kotak */
-        display: inline-block; /* Agar properti width diterapkan */
+        display: block; /* Mengatur elemen menjadi block */
+        padding: 15px; /* Jarak dalam elemen */
+        margin: 10px 0; /* Jarak antar elemen */
+        border-radius: 10px; /* Sudut membulat */
+        text-align: center; /* Teks rata tengah */
+        font-weight: bold; /* Teks tebal */
+        cursor: pointer; /* Menunjukkan elemen bisa diklik */
+        background-color: #f0f0f0; /* Warna latar belakang */
+        border: 1px solid #ccc; /* Border dengan warna abu-abu */
+        width: 100%; /* Lebar penuh */
     }
     .sidebar-box:hover {
-        background-color: #e0e0e0;
-        border-color: #bbb;
+        background-color: #e0e0e0; /* Warna latar belakang saat hover */
+        border-color: #bbb; /* Warna border saat hover */
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
+
 
 
 # State untuk navigasi
