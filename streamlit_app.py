@@ -155,9 +155,11 @@ def navigate_to(page):
     st.session_state.page = page
 
 # Tombol Navigasi
-st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
+</style>
+    <a href="#" class="sidebar-box" onclick="window.location.reload(); window.streamlitSend({type: 'navigate', value: 'Home'})">🏠 Home</a>
+    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Operasi Deteksi'})">🔍 Operasi Deteksi</a>
+    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Hasil Deteksi'})">📊 Hasil Deteksi</a>
+    """,
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
