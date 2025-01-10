@@ -36,7 +36,7 @@ def home_page():
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>YOLO (You Only Look Once)</strong> untuk mendeteksi penyakit pada daun mangga.
+        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B0.</strong> untuk mendeteksi penyakit pada daun mangga.
         Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
@@ -53,7 +53,7 @@ def detection_page():
     st.markdown(
         """
         <p style='text-align: justify; font-size: 14px; color: #888;'>
-        0.5 adalah default. Jika diubah kurang atau lebih, kemungkinan hasil tidak sesuai atau terjadi error.
+        0.50 adalah default. Jika diubah kurang atau lebih, kemungkinan hasil tidak sesuai atau terjadi error.
         </p>
         """,
         unsafe_allow_html=True,
