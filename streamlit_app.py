@@ -43,8 +43,6 @@ def home_page():
         """,
         unsafe_allow_html=True,
     )
-    # Tambahkan gambar di bawah tulisan
-  
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -123,29 +121,36 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi Sidebar
+# Sidebar Navigasi dengan CSS dan HTML
 st.sidebar.markdown(
     """
     <style>
     .sidebar-box {
-        display: block; /* Mengatur elemen menjadi block */
-        padding: 15px; /* Jarak dalam elemen */
-        margin: 10px 0; /* Jarak antar elemen */
-        border-radius: 10px; /* Sudut membulat */
-        text-align: center; /* Teks rata tengah */
-        font-weight: bold; /* Teks tebal */
-        cursor: pointer; /* Menunjukkan elemen bisa diklik */
-        background-color: #f0f0f0; /* Warna latar belakang */
-        border: 1px solid #ccc; /* Border dengan warna abu-abu */
-        width: 100%; /* Lebar penuh */
-        color: #333; /* Warna teks */
-        text-decoration: none; /* Hilangkan garis bawah */
+        display: block;
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 10px;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        width: 100%;
+        color: #333;
+        text-decoration: none;
     }
     .sidebar-box:hover {
-        background-color: #e0e0e0; /* Warna latar belakang saat hover */
-        border-color: #bbb; /* Warna border saat hover */
+        background-color: #e0e0e0;
+        border-color: #bbb;
     }
-   
+    </style>
+    <a href="#" class="sidebar-box" onclick="window.location.reload(); window.streamlitSend({type: 'navigate', value: 'Home'})">🏠 Home</a>
+    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Operasi Deteksi'})">🔍 Operasi Deteksi</a>
+    <a href="#" class="sidebar-box" onclick="window.streamlitSend({type: 'navigate', value: 'Hasil Deteksi'})">📊 Hasil Deteksi</a>
+    """,
+    unsafe_allow_html=True,
+)
+
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
@@ -154,10 +159,6 @@ if "page" not in st.session_state:
 def navigate_to(page):
     st.session_state.page = page
 
-# Tombol Navigasi
-st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
