@@ -130,41 +130,15 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi kotak di sidebar
+# Navigasi Sidebar yang Tidak Menyerupai Radio Button
 st.sidebar.title("🔄 Navigasi")
-st.sidebar.markdown(
-    """
-    <style>
-    .stSidebar .stRadio label {
-        display: block;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        background-color: #f9f9f9;
-        font-weight: bold;
-        text-align: center;
-        cursor: pointer;
-    }
-    .stSidebar .stRadio label:hover {
-        background-color: #e6e6e6;
-    }
-    .stSidebar .stRadio label[data-selected="true"] {
-        background-color: #4CAF50;
-        color: white;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
-
-menu = st.sidebar.radio(
+menu = st.sidebar.selectbox(
     "Pilih Halaman",
     ["🏠 Home", "Operasi Deteksi", "Hasil Deteksi"],
-    label_visibility="collapsed",
+    format_func=lambda x: x.split(" ")[1],  # Hanya menampilkan teks tanpa ikon
 )
 
-if menu == "🏠 Home":
+if menu == "Home":
     home_page()
 elif menu == "Operasi Deteksi":
     detection_page()
