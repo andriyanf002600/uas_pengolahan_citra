@@ -123,7 +123,6 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi Sidebar
 st.sidebar.markdown(
     """
     <style>
@@ -136,8 +135,8 @@ st.sidebar.markdown(
         cursor: pointer;
         background-color: #f0f0f0;
         border: 1px solid #ccc;
-        width: 200px; /* Lebar tetap untuk semua kotak */
-        display: inline-block; /* Agar properti width diterapkan */
+        width: 200px; /* Lebar tetap */
+        display: inline-block;
     }
     .sidebar-box:hover {
         background-color: #e0e0e0;
@@ -147,7 +146,6 @@ st.sidebar.markdown(
     """,
     unsafe_allow_html=True,
 )
-
 
 # State untuk navigasi
 if "page" not in st.session_state:
