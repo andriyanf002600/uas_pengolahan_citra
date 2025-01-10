@@ -135,13 +135,10 @@ def view_results_page():
 st.markdown(
     """
     <style>
-    /* Lebarkan sidebar */
-    [data-testid="stSidebar"] {
-        width: 350px; /* Lebar sidebar (ubah sesuai kebutuhan) */
-    }
-    /* Atur ulang area konten agar tidak terlalu sempit */
-    [data-testid="stAppViewContainer"] {
-        margin-left: 370px; /* Berikan ruang untuk sidebar */
+    .stButton > button {
+        width: 100%; /* Tombol memenuhi lebar sidebar */
+        padding: 10px; /* Jarak dalam tombol */
+        font-size: 16px; /* Ukuran teks tombol */
     }
     </style>
     """,
