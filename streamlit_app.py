@@ -71,22 +71,6 @@ def detection_page():
             conn.commit()
             st.success("Hasil deteksi berhasil disimpan dengan Model 2!", icon="✅")
 
-
-    with tab1:  # Kamera untuk model bawah
-        st.markdown("<h3>Ambil Foto dengan Kamera (Model Bottom)</h3>", unsafe_allow_html=True)
-        image = st.camera_input('Klik tombol di bawah untuk mengambil foto:')
-        if image:
-            image = Image.open(image)
-            pred = prediction(image, confidence, model_bottom)
-            st.image(pred, caption="Hasil Deteksi", use_column_width=True)
-
-            buffer = io.BytesIO()
-            Image.fromarray(pred).save(buffer, format="PNG")
-            img_bytes = buffer.getvalue()
-            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('camera_bottom', img_bytes))
-            conn.commit()
-            st.success("Hasil deteksi berhasil disimpan!", icon="✅")
-
 # Halaman Hasil Deteksi
 def view_results_page():
     st.markdown(
