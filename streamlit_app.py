@@ -149,10 +149,7 @@ def statistics_page():
     if not data:
         st.info("Belum ada data untuk ditampilkan.", icon="ℹ️")
         return
-
-    df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
-    st.dataframe(df)
-   st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
     fig_plotly = px.bar(
         df, 
         x='Model', 
@@ -161,6 +158,10 @@ def statistics_page():
         title="Jumlah Deteksi per Model (Interaktif)",
         text='Jumlah Deteksi'
     )
+    st.plotly_chart(fig_plotly, use_container_width=True)
+    df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
+    st.dataframe(df)
+   
     st.markdown("<h3>Grafik Jumlah Deteksi per Model</h3>", unsafe_allow_html=True)
     fig, ax = plt.subplots()
     ax.bar(df['Model'], df['Jumlah Deteksi'], color=['#FF5722', '#4CAF50'])
@@ -170,7 +171,6 @@ def statistics_page():
     st.pyplot(fig)
 
  
-    st.plotly_chart(fig_plotly, use_container_width=True)
 
 # Sidebar Navigasi
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
