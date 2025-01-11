@@ -172,9 +172,6 @@ def statistics_page():
     )
     st.plotly_chart(fig_plotly, use_container_width=True)
 
-    st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
-    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Bar-chart-example.svg/1920px-Bar-chart-example.svg.png", caption="Contoh Grafik Bar", use_column_width=True)
-
 # Sidebar Navigasi
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
 st.sidebar.button("🏠 Home", on_click=lambda: st.session_state.update(page="Home"))
