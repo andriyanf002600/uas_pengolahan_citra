@@ -156,16 +156,7 @@ def statistics_page():
         unsafe_allow_html=True,
     )
   
-    st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
-    fig_plotly = px.bar(
-        df,
-        x='Model',
-        y='Jumlah Deteksi',
-        color='Model',
-        title="Jumlah Deteksi per Model (Interaktif)",
-        text='Jumlah Deteksi'
-    )
-    st.plotly_chart(fig_plotly, use_container_width=True)
+    
   
     data = c.execute("SELECT tab, COUNT(*) as count FROM images GROUP BY tab").fetchall()
     if not data:
@@ -183,7 +174,16 @@ def statistics_page():
     ax.set_ylabel("Jumlah Deteksi")
     st.pyplot(fig)
 
-
+st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+    fig_plotly = px.bar(
+        df,
+        x='Model',
+        y='Jumlah Deteksi',
+        color='Model',
+        title="Jumlah Deteksi per Model (Interaktif)",
+        text='Jumlah Deteksi'
+    )
+    st.plotly_chart(fig_plotly, use_container_width=True)
 
     st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
     st.image("https://cdn1.katadata.co.id/media/chart_thumbnail/134881-jawa-timur-sentra-produksi-buah-mangga-nasional.png?v=1734673429", caption="Grafik Bar", use_column_width=True)
