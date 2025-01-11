@@ -13,6 +13,36 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
               tab TEXT, 
               image BLOB)''')
 conn.commit()
+# Inisialisasi dua model YOLO
+model_top = YOLO("best.pt")   # Model untuk tab atas
+model_bottom = YOLO("best1.pt")  # Model untuk tab bawah
+
+def prediction(image, conf, model):
+    result = model.predict(image, conf=conf)
+    res_plotted = result[0].plot()[:, :, ::-1]
+    return res_plotted
+
+def delete_image(image_id):
+    c.execute("DELETE FROM images WHERE id=?", (image_id,))
+    conn.commit()
+    st.experimental_rerun()
+
+# Halaman Home (Kosong)
+def home_page():
+    st.markdown(
+        "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
+        unsafe_allow_html=True,
+    )
+    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
+    st.markdown(
+        """
+        <p style='text-align: justify;'>
+        Aplikasi ini menggunakan teknologi <strong>YOLO v8</strong> untuk mendeteksi penyakit pada daun mangga.
+        Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
+        </p>
+        """,
+        unsafe_allow_html=True,
+    )
 
 # Inisialisasi model YOLO
 model1 = YOLO("best.pt")  # Model pertama
@@ -39,10 +69,10 @@ def detection_page():
         unsafe_allow_html=True,
     )
 
-    tab1, tab2 = st.tabs(['📂 Model 1: Upload Gambar', '📂 Model 2: Upload Gambar'])  # Tab untuk kedua model
+    tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B7: Upload Gambar'])  # Tab untuk kedua model
 
     with tab1:  # Upload Gambar dengan Model 1
-        st.markdown("<h3>Unggah Gambar (Model: best.pt)</h3>", unsafe_allow_html=True)
+        st.markdown("<h3>Unggah Gambar (Model: YOLOv8)</h3>", unsafe_allow_html=True)
         uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda (Model 1):', type=['jpg', 'jpeg', 'png'])
         if uploaded_image:
             image = Image.open(uploaded_image)
@@ -57,7 +87,7 @@ def detection_page():
             st.success("Hasil deteksi berhasil disimpan dengan Model 1!", icon="✅")
 
     with tab2:  # Upload Gambar dengan Model 2
-        st.markdown("<h3>Unggah Gambar (Model: best1.pt)</h3>", unsafe_allow_html=True)
+        st.markdown("<h3>Unggah Gambar (Model: EfficientNet-B7)</h3>", unsafe_allow_html=True)
         uploaded_image_model2 = st.file_uploader('Pilih gambar dari perangkat Anda (Model 2):', type=['jpg', 'jpeg', 'png'])
         if uploaded_image_model2:
             image = Image.open(uploaded_image_model2)
