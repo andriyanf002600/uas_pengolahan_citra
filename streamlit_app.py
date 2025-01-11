@@ -3,6 +3,9 @@ from ultralytics import YOLO
 from PIL import Image
 import io
 import sqlite3
+import matplotlib.pyplot as plt
+import plotly.express as px
+import pandas as pd
 
 # Inisialisasi database
 conn = sqlite3.connect('database.db')
@@ -13,6 +16,7 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
               tab TEXT, 
               image BLOB)''')
 conn.commit()
+
 # Inisialisasi dua model YOLO
 model_top = YOLO("best.pt")   # Model untuk tab atas
 model_bottom = YOLO("best1.pt")  # Model untuk tab bawah
@@ -37,7 +41,7 @@ def home_page():
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan dua teknologi yang bisa di pilih <strong>YOLO v8 Dan EfficientNet-B7</strong> untuk mendeteksi penyakit pada daun mangga.
+        Aplikasi ini menggunakan dua teknologi yang bisa dipilih <strong>YOLO v8 Dan EfficientNet-B7</strong> untuk mendeteksi penyakit pada daun mangga.
         Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
@@ -71,9 +75,9 @@ def detection_page():
 
     tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B7: Upload Gambar'])  # Tab untuk kedua model
 
-    with tab1:  # Upload Gambar dengan Model 1
+    with tab1:
         st.markdown("<h3>Unggah Gambar (Model: YOLOv8)</h3>", unsafe_allow_html=True)
-        uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda (Model 1):', type=['jpg', 'jpeg', 'png'])
+        uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda (Model YOLOv8):', type=['jpg', 'jpeg', 'png'])
         if uploaded_image:
             image = Image.open(uploaded_image)
             pred = prediction_with_model(image, confidence, model1)
@@ -86,9 +90,9 @@ def detection_page():
             conn.commit()
             st.success("Hasil deteksi berhasil disimpan dengan Model YOLOv8!", icon="✅")
 
-    with tab2:  # Upload Gambar dengan Model 2
+    with tab2:
         st.markdown("<h3>Unggah Gambar (Model: EfficientNet-B7)</h3>", unsafe_allow_html=True)
-        uploaded_image_model2 = st.file_uploader('Pilih gambar dari perangkat Anda (Model 2):', type=['jpg', 'jpeg', 'png'])
+        uploaded_image_model2 = st.file_uploader('Pilih gambar dari perangkat Anda (Model EfficientNet-B7):', type=['jpg', 'jpeg', 'png'])
         if uploaded_image_model2:
             image = Image.open(uploaded_image_model2)
             pred = prediction_with_model(image, confidence, model2)
@@ -130,58 +134,65 @@ def view_results_page():
                 delete_image(image_id)
                 st.success("Gambar berhasil dihapus!", icon="✅")
 
-# Navigasi Sidebar
-st.sidebar.markdown(
-    """
-    <style>
-    .sidebar-box {
-        display: block; /* Mengatur elemen menjadi block */
-        padding: 15px; /* Jarak dalam elemen */
-        margin: 10px 0; /* Jarak antar elemen */
-        border-radius: 10px; /* Sudut membulat */
-        text-align: center; /* Teks rata tengah */
-        font-weight: bold; /* Teks tebal */
-        cursor: pointer; /* Menunjukkan elemen bisa diklik */
-        background-color: #f0f0f0; /* Warna latar belakang */
-        border: 1px solid #ccc; /* Border dengan warna abu-abu */
-        width: 100%; /* Lebar penuh */
-    }
-    .sidebar-box:hover {
-        background-color: #e0e0e0; /* Warna latar belakang saat hover */
-        border-color: #bbb; /* Warna border saat hover */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+# Halaman Statistik
+def statistics_page():
+    st.markdown(
+        "<h1 style='text-align: center; color: #4CAF50;'>Statistik 📈</h1>",
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        "<p style='text-align: justify;'>Halaman ini menampilkan statistik dari hasil deteksi yang telah dilakukan.</p>",
+        unsafe_allow_html=True,
+    )
+    
+    data = c.execute("SELECT tab, COUNT(*) as count FROM images GROUP BY tab").fetchall()
+    if not data:
+        st.info("Belum ada data untuk ditampilkan.", icon="ℹ️")
+        return
 
-# State untuk navigasi
+    df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
+    st.dataframe(df)
+
+    st.markdown("<h3>Grafik Jumlah Deteksi per Model</h3>", unsafe_allow_html=True)
+    fig, ax = plt.subplots()
+    ax.bar(df['Model'], df['Jumlah Deteksi'], color=['#FF5722', '#4CAF50'])
+    ax.set_title("Jumlah Deteksi per Model")
+    ax.set_xlabel("Model")
+    ax.set_ylabel("Jumlah Deteksi")
+    st.pyplot(fig)
+
+    st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+    fig_plotly = px.bar(
+        df, 
+        x='Model', 
+        y='Jumlah Deteksi', 
+        color='Model',
+        title="Jumlah Deteksi per Model (Interaktif)",
+        text='Jumlah Deteksi'
+    )
+    st.plotly_chart(fig_plotly, use_container_width=True)
+
+    st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Bar-chart-example.svg/1920px-Bar-chart-example.svg.png", caption="Contoh Grafik Bar", use_column_width=True)
+
+# Sidebar Navigasi
+st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
+st.sidebar.button("🏠 Home", on_click=lambda: st.session_state.update(page="Home"))
+st.sidebar.button("🔍 Operasi Deteksi", on_click=lambda: st.session_state.update(page="Operasi Deteksi"))
+st.sidebar.button("📊 Hasil Deteksi", on_click=lambda: st.session_state.update(page="Hasil Deteksi"))
+st.sidebar.button("📈 Statistik", on_click=lambda: st.session_state.update(page="Statistik"))
+
 if "page" not in st.session_state:
     st.session_state.page = "Home"
 
-# Fungsi Navigasi
-def navigate_to(page):
-    st.session_state.page = page
-
-# Tombol Navigasi
-st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
-st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
-st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
-st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
-
-# Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
 elif st.session_state.page == "Operasi Deteksi":
     detection_page()
 elif st.session_state.page == "Hasil Deteksi":
     view_results_page()
+elif st.session_state.page == "Statistik":
+    statistics_page()
 
-# Footer Copyright di semua halaman
-st.markdown(
-    "<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>",
-    unsafe_allow_html=True,
-)
-
-# Tutup koneksi database
+st.markdown("<hr><p style='text-align: center;'>© Andriyan Firmansyah-227006416022-Pengolahan Citra</p>", unsafe_allow_html=True)
 conn.close()
