@@ -144,24 +144,8 @@ def statistics_page():
         "<p style='text-align: justify;'>Halaman ini menampilkan statistik dari hasil deteksi yang telah dilakukan.</p>",
         unsafe_allow_html=True,
     )
-    
-    data = c.execute("SELECT tab, COUNT(*) as count FROM images GROUP BY tab").fetchall()
-    if not data:
-        st.info("Belum ada data untuk ditampilkan.", icon="ℹ️")
-        return
-
-    df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
-    st.dataframe(df)
-   
-    st.markdown("<h3>Grafik Jumlah Deteksi per Model</h3>", unsafe_allow_html=True)
-    fig, ax = plt.subplots()
-    ax.bar(df['Model'], df['Jumlah Deteksi'], color=['#FF5722', '#4CAF50'])
-    ax.set_title("Jumlah Deteksi per Model")
-    ax.set_xlabel("Model")
-    ax.set_ylabel("Jumlah Deteksi")
-    st.pyplot(fig)
   
-st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
     fig_plotly = px.bar(
         df, 
         x='Model', 
@@ -170,8 +154,28 @@ st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
         title="Jumlah Deteksi per Model (Interaktif)",
         text='Jumlah Deteksi'
     )
+  
+    data = c.execute("SELECT tab, COUNT(*) as count FROM images GROUP BY tab").fetchall()
+    if not data:
+        st.info("Belum ada data untuk ditampilkan.", icon="ℹ️")
+        return
+
+    df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
+    st.dataframe(df)
+
+    st.markdown("<h3>Grafik Jumlah Deteksi per Model</h3>", unsafe_allow_html=True)
+    fig, ax = plt.subplots()
+    ax.bar(df['Model'], df['Jumlah Deteksi'], color=['#FF5722', '#4CAF50'])
+    ax.set_title("Jumlah Deteksi per Model")
+    ax.set_xlabel("Model")
+    ax.set_ylabel("Jumlah Deteksi")
+    st.pyplot(fig)
+
+    
     st.plotly_chart(fig_plotly, use_container_width=True)
- 
+
+    st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
+    st.image("https://drive.google.com/file/d/11c2pKpSz2ym32cfNF7kX5RRwYB9KuBom/view?usp=drive_link", caption="Grafik Bar", use_column_width=True)
 
 # Sidebar Navigasi
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
