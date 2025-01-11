@@ -37,7 +37,7 @@ def home_page():
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>YOLO v8</strong> untuk mendeteksi penyakit pada daun mangga.
+        Aplikasi ini menggunakan dua teknologi yang bisa di pilih <strong>YOLO v8 Dan EfficientNet-B7</strong> untuk mendeteksi penyakit pada daun mangga.
         Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
@@ -84,7 +84,7 @@ def detection_page():
             img_bytes = buffer.getvalue()
             c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('model1_upload', img_bytes))
             conn.commit()
-            st.success("Hasil deteksi berhasil disimpan dengan Model 1!", icon="✅")
+            st.success("Hasil deteksi berhasil disimpan dengan Model YOLOv8!", icon="✅")
 
     with tab2:  # Upload Gambar dengan Model 2
         st.markdown("<h3>Unggah Gambar (Model: EfficientNet-B7)</h3>", unsafe_allow_html=True)
@@ -92,7 +92,7 @@ def detection_page():
         if uploaded_image_model2:
             image = Image.open(uploaded_image_model2)
             pred = prediction_with_model(image, confidence, model2)
-            st.image(pred, caption="Hasil Deteksi (Model 2)", use_column_width=True)
+            st.image(pred, caption="Hasil Deteksi (Model EfficientNet-B7)", use_column_width=True)
 
             buffer = io.BytesIO()
             Image.fromarray(pred).save(buffer, format="PNG")
