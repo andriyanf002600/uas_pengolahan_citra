@@ -14,10 +14,11 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
               image BLOB)''')
 conn.commit()
 
-# Inisialisasi model YOLO
-model = YOLO("best.pt")
+# Inisialisasi dua model YOLO
+model_top = YOLO("best.pt")   # Model untuk tab atas
+model_bottom = YOLO("best1.pt")  # Model untuk tab bawah
 
-def prediction(image, conf):
+def prediction(image, conf, model):
     result = model.predict(image, conf=conf)
     res_plotted = result[0].plot()[:, :, ::-1]
     return res_plotted
@@ -37,14 +38,12 @@ def home_page():
     st.markdown(
         """
         <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>efficientnet tensorflow/efficientnet Imagenet (ILSVRC-2012-CLS) classification with EfficientNet-B7.</strong> untuk mendeteksi penyakit pada daun mangga.
+        Aplikasi ini menggunakan teknologi <strong>YOLO v8</strong> untuk mendeteksi penyakit pada daun mangga.
         Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
         </p>
         """,
         unsafe_allow_html=True,
     )
-    # Tambahkan gambar di bawah tulisan
-  
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -64,33 +63,33 @@ def detection_page():
 
     tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])  # Upload di kiri, Kamera di kanan
 
-    with tab2:  # Upload Gambar
-        st.markdown("<h3>Unggah Gambar</h3>", unsafe_allow_html=True)
+    with tab2:  # Upload Gambar untuk model atas
+        st.markdown("<h3>Unggah Gambar (Model Top)</h3>", unsafe_allow_html=True)
         uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda:', type=['jpg', 'jpeg', 'png'])
         if uploaded_image:
             image = Image.open(uploaded_image)
-            pred = prediction(image, confidence)
+            pred = prediction(image, confidence, model_top)
             st.image(pred, caption="Hasil Deteksi", use_column_width=True)
 
             buffer = io.BytesIO()
             Image.fromarray(pred).save(buffer, format="PNG")
             img_bytes = buffer.getvalue()
-            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('upload', img_bytes))
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('upload_top', img_bytes))
             conn.commit()
             st.success("Hasil deteksi berhasil disimpan!", icon="✅")
 
-    with tab1:  # Kamera
-        st.markdown("<h3>Ambil Foto dengan Kamera</h3>", unsafe_allow_html=True)
+    with tab1:  # Kamera untuk model bawah
+        st.markdown("<h3>Ambil Foto dengan Kamera (Model Bottom)</h3>", unsafe_allow_html=True)
         image = st.camera_input('Klik tombol di bawah untuk mengambil foto:')
         if image:
             image = Image.open(image)
-            pred = prediction(image, confidence)
+            pred = prediction(image, confidence, model_bottom)
             st.image(pred, caption="Hasil Deteksi", use_column_width=True)
 
             buffer = io.BytesIO()
             Image.fromarray(pred).save(buffer, format="PNG")
             img_bytes = buffer.getvalue()
-            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('camera', img_bytes))
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('camera_bottom', img_bytes))
             conn.commit()
             st.success("Hasil deteksi berhasil disimpan!", icon="✅")
 
@@ -148,8 +147,6 @@ st.sidebar.markdown(
     unsafe_allow_html=True,
 )
 
-
-
 # State untuk navigasi
 if "page" not in st.session_state:
     st.session_state.page = "Home"
@@ -163,6 +160,7 @@ st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", uns
 st.sidebar.button("🏠 Home", on_click=navigate_to, args=("Home",), key="home_btn", help="Kembali ke halaman Home")
 st.sidebar.button("🔍 Operasi Deteksi", on_click=navigate_to, args=("Operasi Deteksi",), key="detect_btn", help="Pergi ke Operasi Deteksi")
 st.sidebar.button("📊 Hasil Deteksi", on_click=navigate_to, args=("Hasil Deteksi",), key="results_btn", help="Lihat hasil deteksi")
+
 # Halaman berdasarkan navigasi
 if st.session_state.page == "Home":
     home_page()
