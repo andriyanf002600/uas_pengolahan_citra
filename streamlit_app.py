@@ -149,16 +149,7 @@ def statistics_page():
     if not data:
         st.info("Belum ada data untuk ditampilkan.", icon="ℹ️")
         return
-st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
-    fig_plotly = px.bar(
-        df, 
-        x='Model', 
-        y='Jumlah Deteksi', 
-        color='Model',
-        title="Jumlah Deteksi per Model (Interaktif)",
-        text='Jumlah Deteksi'
-    )
-    st.plotly_chart(fig_plotly, use_container_width=True)
+
     df = pd.DataFrame(data, columns=['Model', 'Jumlah Deteksi'])
     st.dataframe(df)
    
@@ -169,7 +160,17 @@ st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
     ax.set_xlabel("Model")
     ax.set_ylabel("Jumlah Deteksi")
     st.pyplot(fig)
-
+  
+st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+    fig_plotly = px.bar(
+        df, 
+        x='Model', 
+        y='Jumlah Deteksi', 
+        color='Model',
+        title="Jumlah Deteksi per Model (Interaktif)",
+        text='Jumlah Deteksi'
+    )
+    st.plotly_chart(fig_plotly, use_container_width=True)
  
 
 # Sidebar Navigasi
