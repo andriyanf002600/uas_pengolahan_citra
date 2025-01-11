@@ -14,36 +14,14 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
               image BLOB)''')
 conn.commit()
 
-# Inisialisasi dua model YOLO
-model_top = YOLO("best.pt")   # Model untuk tab atas
-model_bottom = YOLO("best1.pt")  # Model untuk tab bawah
+# Inisialisasi model YOLO
+model1 = YOLO("best.pt")  # Model pertama
+model2 = YOLO("best1.pt")  # Model kedua
 
-def prediction(image, conf, model):
+def prediction_with_model(image, conf, model):
     result = model.predict(image, conf=conf)
     res_plotted = result[0].plot()[:, :, ::-1]
     return res_plotted
-
-def delete_image(image_id):
-    c.execute("DELETE FROM images WHERE id=?", (image_id,))
-    conn.commit()
-    st.experimental_rerun()
-
-# Halaman Home (Kosong)
-def home_page():
-    st.markdown(
-        "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
-        unsafe_allow_html=True,
-    )
-    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
-    st.markdown(
-        """
-        <p style='text-align: justify;'>
-        Aplikasi ini menggunakan teknologi <strong>YOLO v8</strong> untuk mendeteksi penyakit pada daun mangga.
-        Dengan pendekatan deep learning, aplikasi ini dirancang untuk memberikan hasil deteksi yang cepat dan akurat.
-        </p>
-        """,
-        unsafe_allow_html=True,
-    )
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -61,22 +39,38 @@ def detection_page():
         unsafe_allow_html=True,
     )
 
-    tab2, tab1 = st.tabs(['📂 Upload Gambar', '📷 Kamera'])  # Upload di kiri, Kamera di kanan
+    tab1, tab2 = st.tabs(['📂 Model 1: Upload Gambar', '📂 Model 2: Upload Gambar'])  # Tab untuk kedua model
 
-    with tab2:  # Upload Gambar untuk model atas
-        st.markdown("<h3>Unggah Gambar (Model Top)</h3>", unsafe_allow_html=True)
-        uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda:', type=['jpg', 'jpeg', 'png'])
+    with tab1:  # Upload Gambar dengan Model 1
+        st.markdown("<h3>Unggah Gambar (Model: best.pt)</h3>", unsafe_allow_html=True)
+        uploaded_image = st.file_uploader('Pilih gambar dari perangkat Anda (Model 1):', type=['jpg', 'jpeg', 'png'])
         if uploaded_image:
             image = Image.open(uploaded_image)
-            pred = prediction(image, confidence, model_top)
-            st.image(pred, caption="Hasil Deteksi", use_column_width=True)
+            pred = prediction_with_model(image, confidence, model1)
+            st.image(pred, caption="Hasil Deteksi (Model 1)", use_column_width=True)
 
             buffer = io.BytesIO()
             Image.fromarray(pred).save(buffer, format="PNG")
             img_bytes = buffer.getvalue()
-            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('upload_top', img_bytes))
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('model1_upload', img_bytes))
             conn.commit()
-            st.success("Hasil deteksi berhasil disimpan!", icon="✅")
+            st.success("Hasil deteksi berhasil disimpan dengan Model 1!", icon="✅")
+
+    with tab2:  # Upload Gambar dengan Model 2
+        st.markdown("<h3>Unggah Gambar (Model: best1.pt)</h3>", unsafe_allow_html=True)
+        uploaded_image_model2 = st.file_uploader('Pilih gambar dari perangkat Anda (Model 2):', type=['jpg', 'jpeg', 'png'])
+        if uploaded_image_model2:
+            image = Image.open(uploaded_image_model2)
+            pred = prediction_with_model(image, confidence, model2)
+            st.image(pred, caption="Hasil Deteksi (Model 2)", use_column_width=True)
+
+            buffer = io.BytesIO()
+            Image.fromarray(pred).save(buffer, format="PNG")
+            img_bytes = buffer.getvalue()
+            c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('model2_upload', img_bytes))
+            conn.commit()
+            st.success("Hasil deteksi berhasil disimpan dengan Model 2!", icon="✅")
+
 
     with tab1:  # Kamera untuk model bawah
         st.markdown("<h3>Ambil Foto dengan Kamera (Model Bottom)</h3>", unsafe_allow_html=True)
