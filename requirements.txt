@@ -9,3 +9,4 @@ Pillow==10.3.0
 ultralytics==8.2.12
 torchvision==0.17.0
 opencv-python-headless
+plotly
