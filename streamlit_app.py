@@ -173,7 +173,7 @@ def statistics_page():
     st.plotly_chart(fig_plotly, use_container_width=True)
 
     st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
-    st.image("https://cdn1.katadata.co.id/media/chart_thumbnail/134881-jawa-timur-sentra-produksi-buah-mangga-nasional.png?v=1734673429", caption="Contoh Grafik Bar", use_column_width=True)
+    st.image("https://cdn1.katadata.co.id/media/chart_thumbnail/134881-jawa-timur-sentra-produksi-buah-mangga-nasional.png?v=1734673429", caption="Grafik Statistik Penjualan Mangga", use_column_width=True)
 
 # Sidebar Navigasi
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
