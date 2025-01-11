@@ -112,6 +112,17 @@ def view_results_page():
         unsafe_allow_html=True,
     )
     st.markdown("<p style='text-align: center;'>Berikut adalah daftar hasil deteksi yang telah Anda lakukan.</p>", unsafe_allow_html=True)
+    
+  st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
+    fig_plotly = px.bar(
+        df, 
+        x='Model', 
+        y='Jumlah Deteksi', 
+        color='Model',
+        title="Jumlah Deteksi per Model (Interaktif)",
+        text='Jumlah Deteksi'
+    )
+    st.plotly_chart(fig_plotly, use_container_width=True)
 
     images = c.execute("SELECT id, image FROM images ORDER BY id DESC").fetchall()
     if not images:
@@ -163,19 +174,10 @@ def statistics_page():
     ax.set_ylabel("Jumlah Deteksi")
     st.pyplot(fig)
 
-    st.markdown("<h3>Visualisasi Interaktif</h3>", unsafe_allow_html=True)
-    fig_plotly = px.bar(
-        df, 
-        x='Model', 
-        y='Jumlah Deteksi', 
-        color='Model',
-        title="Jumlah Deteksi per Model (Interaktif)",
-        text='Jumlah Deteksi'
-    )
-    st.plotly_chart(fig_plotly, use_container_width=True)
+
 
     st.markdown("<h3>Foto Grafik Contoh</h3>", unsafe_allow_html=True)
-    st.image("https://drive.google.com/file/d/11c2pKpSz2ym32cfNF7kX5RRwYB9KuBom/view?usp=drive_link", caption="Grafik Bar", use_column_width=True)
+    st.image("https://cdn1.katadata.co.id/media/chart_thumbnail/134881-jawa-timur-sentra-produksi-buah-mangga-nasional.png?v=1734673429", caption="Grafik Bar", use_column_width=True)
 
 # Sidebar Navigasi
 st.sidebar.markdown("<h2 style='text-align: center;'>⚙️ Main Menu</h2>", unsafe_allow_html=True)
