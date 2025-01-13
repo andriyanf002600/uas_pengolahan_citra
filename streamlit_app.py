@@ -49,8 +49,8 @@ def home_page():
     )
 
 # Inisialisasi model YOLO
-model1 = YOLO("best.pt")  # Model pertama
-model2 = YOLO("best1.pt")  # Model kedua
+model1 = YOLO("best1.pt")  # Model pertama
+model2 = YOLO("best.pt")  # Model kedua
 
 def prediction_with_model(image, conf, model):
     result = model.predict(image, conf=conf)
