@@ -18,8 +18,8 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
 conn.commit()
 
 # Inisialisasi dua model YOLO
-model_top = YOLO("best.pt")   # Model untuk tab atas
-model_bottom = YOLO("best1.pt")  # Model untuk tab bawah
+model_top = YOLO("best1.pt")   # Model untuk tab atas
+model_bottom = YOLO("best.pt")  # Model untuk tab bawah
 
 def prediction(image, conf, model):
     result = model.predict(image, conf=conf)
