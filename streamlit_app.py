@@ -17,14 +17,6 @@ c.execute('''CREATE TABLE IF NOT EXISTS images
               image BLOB)''')
 conn.commit()
 
-# Inisialisasi dua model YOLO
-model_top = YOLO("best1.pt")   # Model untuk tab atas
-model_bottom = YOLO("best.pt")  # Model untuk tab bawah
-
-def prediction(image, conf, model):
-    result = model.predict(image, conf=conf)
-    res_plotted = result[0].plot()[:, :, ::-1]
-    return res_plotted
 
 def delete_image(image_id):
     c.execute("DELETE FROM images WHERE id=?", (image_id,))
