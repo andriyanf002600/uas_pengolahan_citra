@@ -40,7 +40,7 @@ def home_page():
         unsafe_allow_html=True,
     )
 
-# Inisialisasi model YOLO
+# Inisialisasi model
 model1 = YOLO("best1.pt")  # Model pertama
 model2 = YOLO("best.pt")  # Model kedua
 
