@@ -6,6 +6,7 @@ import sqlite3
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
+from keras.applications import EfficientNetB0
 
 # Inisialisasi database
 conn = sqlite3.connect('database.db')
