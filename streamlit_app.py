@@ -83,7 +83,7 @@ def detection_page():
         unsafe_allow_html=True,
     )
 
-    tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B0: Upload Gambar'])  # Tab untuk kedua model
+    tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B7: Upload Gambar'])  # Tab untuk kedua model
 
     with tab1:
         st.markdown("<h3>Unggah Gambar (Model: YOLOv8)</h3>", unsafe_allow_html=True)
