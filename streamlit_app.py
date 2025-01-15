@@ -42,12 +42,29 @@ def home_page():
 
 # Inisialisasi model
 model1 = YOLO("best1.pt")  # Model pertama
-model2 = YOLO("best.pt")  # Model kedua
+from tensorflow.keras.applications import EfficientNetB0
+model2 = EfficientNetB0(weights="imagenet")  # Model kedua, menggunakan EfficientNet-B0 dengan bobot pre-trained
 
+# Fungsi prediksi
 def prediction_with_model(image, conf, model):
-    result = model.predict(image, conf=conf)
-    res_plotted = result[0].plot()[:, :, ::-1]
-    return res_plotted
+    if isinstance(model, YOLO):
+        # Prediksi menggunakan model YOLO
+        result = model.predict(image, conf=conf)
+        res_plotted = result[0].plot()[:, :, ::-1]
+        return res_plotted
+    else:
+        # Prediksi menggunakan EfficientNet-B0
+        from tensorflow.keras.preprocessing.image import img_to_array
+        from tensorflow.keras.applications.efficientnet import preprocess_input, decode_predictions
+        import numpy as np
+
+        image_resized = image.resize((224, 224))  # Ukuran input untuk EfficientNet-B0
+        image_array = img_to_array(image_resized)
+        image_array = np.expand_dims(image_array, axis=0)
+        image_array = preprocess_input(image_array)  # Preprocessing
+        preds = model.predict(image_array)
+        decoded_preds = decode_predictions(preds, top=3)[0]
+        return decoded_preds
 
 # Halaman Operasi Deteksi
 def detection_page():
@@ -65,7 +82,7 @@ def detection_page():
         unsafe_allow_html=True,
     )
 
-    tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B7: Upload Gambar'])  # Tab untuk kedua model
+    tab1, tab2 = st.tabs(['📂 Model YOLOv8: Upload Gambar', '📂 Model EfficientNet-B0: Upload Gambar'])  # Tab untuk kedua model
 
     with tab1:
         st.markdown("<h3>Unggah Gambar (Model: YOLOv8)</h3>", unsafe_allow_html=True)
@@ -84,18 +101,33 @@ def detection_page():
 
     with tab2:
         st.markdown("<h3>Unggah Gambar (Model: EfficientNet-B7)</h3>", unsafe_allow_html=True)
-        uploaded_image_model2 = st.file_uploader('Pilih gambar dari perangkat Anda (Model EfficientNet-B7):', type=['jpg', 'jpeg', 'png'])
+        st.markdown("""
+            <p style='text-align: justify;'>Karena ukuran model EfficientNet-B7 terlalu besar, kami menggunakan model 
+            yang lebih ringan, EfficientNet-B0. Model ini tetap memberikan hasil yang memadai untuk deteksi gambar.</p>
+            """, unsafe_allow_html=True)
+        
+        uploaded_image_model2 = st.file_uploader(
+            'Pilih gambar dari perangkat Anda (Model EfficientNet-B7):', 
+            type=['jpg', 'jpeg', 'png']
+        )
+        
         if uploaded_image_model2:
             image = Image.open(uploaded_image_model2)
-            pred = prediction_with_model(image, confidence, model2)
-            st.image(pred, caption="Hasil Deteksi (Model EfficientNet-B7)", use_column_width=True)
-
+            results = prediction_with_model(image, confidence, model2)  # Model EfficientNet-B7
+            st.image(image, caption="Gambar yang Diunggah", use_column_width=True)
+            
+            # Tampilkan hasil prediksi
+            st.markdown("### Hasil Deteksi")
+            for (_, label, prob) in results:
+                st.write(f"{label}: {prob:.2f}")
+            
+            # Simpan hasil deteksi ke database
             buffer = io.BytesIO()
-            Image.fromarray(pred).save(buffer, format="PNG")
+            image.save(buffer, format="PNG")
             img_bytes = buffer.getvalue()
             c.execute("INSERT INTO images (tab, image) VALUES (?, ?)", ('model2_upload', img_bytes))
             conn.commit()
-            st.success("Hasil deteksi berhasil disimpan dengan Model 2!", icon="✅")
+            st.success("Hasil deteksi berhasil disimpan dengan Model EfficientNet-B7!", icon="✅")
 
 # Halaman Hasil Deteksi
 def view_results_page():
