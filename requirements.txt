@@ -10,3 +10,4 @@ ultralytics==8.2.12
 torchvision==0.17.0
 opencv-python-headless
 plotly
+tensorflow==2.13.0
