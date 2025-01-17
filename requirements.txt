@@ -8,3 +8,4 @@ keras
 ultralytics
 opencv-python-headless
 scipy
+plotly
