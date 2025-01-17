@@ -1,7 +1,6 @@
 streamlit
 ultralytics
 Pillow
-sqlite3
 matplotlib
 plotly
 pandas
