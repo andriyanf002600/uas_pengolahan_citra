@@ -2,7 +2,6 @@ import streamlit as st
 from ultralytics import YOLO
 from PIL import Image
 import io
-import sqlite3
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
