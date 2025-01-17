@@ -30,7 +30,7 @@ def home_page():
         "<h1 style='text-align: center; color: #4CAF50;'>Selamat Datang di Aplikasi Deteksi Penyakit Daun Mangga 🌿</h1>",
         unsafe_allow_html=True,
     )
-    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_column_width=True)
+    st.image("https://akcdn.detik.net.id/community/media/visual/2019/11/05/962485cf-2343-402d-b80c-91d7b9199129_169.jpeg?w=620", caption="Aplikasi Deteksi Penyakit Daun Mangga", use_container_width=True)
     st.markdown(
         """
         <p style='text-align: justify;'>
