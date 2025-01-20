@@ -91,7 +91,7 @@ def detection_page():
         if uploaded_image:
             image = Image.open(uploaded_image)
             pred = prediction_with_model(image, confidence, model1)
-            st.image(pred, caption="Hasil Deteksi (Model 1)", use_column_width=True)
+            st.image(pred, caption="Hasil Deteksi (Model 1)", use_container_width=True)
 
             buffer = io.BytesIO()
             Image.fromarray(pred).save(buffer, format="PNG")
@@ -115,8 +115,8 @@ def detection_page():
         if uploaded_image_model2:
             image = Image.open(uploaded_image_model2)
             results = prediction_with_model(image, confidence, model2)  # Model EfficientNet-B7
-            st.image(image, caption="Gambar yang Diunggah", use_column_width=True)
-            
+            st.image(image, caption="Gambar yang Diunggah", use_container_width=True)
+          
             # Tampilkan hasil prediksi
             st.markdown("### Hasil Deteksi")
             for (_, label, prob) in results:
